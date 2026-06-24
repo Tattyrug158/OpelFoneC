@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css.css">
+    <title>OpelFone - Usuarios</title>
+    <style>
+        /* Estilos estructurales para las ventanas modales flotantes (Overlays) */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-contenido { background: white; padding: 25px; border-radius: 6px; width: 360px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); color: #333; }
+        .modal-contenido h3 { margin-top: 0; }
+        .modal-contenido input, .modal-contenido select { width: 100%; padding: 8px; margin: 8px 0; box-sizing: border-box; }
+        .modal-acciones { display: flex; justify-content: space-between; margin-top: 15px; }
+        .btn-modal { padding: 8px 15px; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        .btn-guardar { background-color: #4CAF50; color: white; }
+        .btn-cancelar { background-color: #f44336; color: white; }
+    </style>
+</head>
+<body>
+    <div class="nab_div">
+        <h1>OpelFone Administrator</h1>
+        <button class="user">A.Alison</button>
+    </div>
+
+    <nav>
+        <div class="nab_div2">
+            <ul class="navbar">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="Mi_Linea.html">Facturación</a></li>
+                <li class="navbarselected"><a href="usuarios.html">Usuarios</a></li>
+                <li><a href="dispositivos.html">Dispositivos</a></li>
+                <li><a href="sistema.html">Sistema</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="contenido">
+        <h2>En línea</h2>
+        <div class="busqueda">
+            <input type="text" placeholder="Buscar usuario...">
+            <button class="buscar">BUSCAR</button>
+        </div>
+
+        <table id="tablaUsuarios">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellidos</th>
+                    <th>Dirección</th>
+                    <th>eMail</th>
+                    <th>Bancarios</th>
+                    <th>Estado</th>
+                    <th>Registro</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="8" style="text-align:center;">Cargando lista de usuarios desde SQL Server...</td></tr>
+            </tbody>
+        </table>
+
+        <div class="botones">
+            <button onclick="abrirModal('modalAddUser')">AÑADIR</button>
+            <button onclick="abrirModal('modalUpdUser')">ACTUALIZAR DATOS</button>
+            <button onclick="abrirModal('modalDelUser')">BORRAR DATOS</button>
+        </div>
+    </main>
+
+    <div id="modalAddUser" class="modal">
+        <div class="modal-contenido">
+            <h3>Añadir Nuevo Usuario</h3>
+            <form id="formAddUser">
+                <input type="number" id="usr_add_id" placeholder="ID Cliente" required>
+                <input type="text" id="usr_add_nombre" placeholder="Nombre" required>
+                <input type="text" id="usr_add_apellidos" placeholder="Apellidos" required>
+                <input type="text" id="usr_add_direccion" placeholder="Dirección" required>
+                <input type="email" id="usr_add_email" placeholder="eMail" required>
+                <input type="text" id="usr_add_bancario" placeholder="Datos Bancarios" required>
+                <select id="usr_add_estado">
+                    <option value="ACTIVO">ACTIVO</option>
+                    <option value="INACTIVO">INACTIVO</option>
+                    <option value="SUSPENDIDO">SUSPENDIDO</option>
+                </select>
+                <input type="password" id="usr_add_pass" placeholder="Contraseña de acceso" required>
+                <div class="modal-acciones">
+                    <button type="button" class="btn-modal btn-cancelar" onclick="cerrarModal('modalAddUser')">Cancelar</button>
+                    <button type="submit" class="btn-modal btn-guardar">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalUpdUser" class="modal">
+        <div class="modal-contenido">
+            <h3>Actualizar Información de Usuario</h3>
+            <form id="formUpdUser">
+                <input type="number" id="usr_upd_id" placeholder="ID del usuario a modificar" required>
+                <hr style="border:0; border-top: 1px solid #eee; margin:10px 0;">
+                <input type="text" id="usr_upd_nombre" placeholder="Nuevo Nombre" required>
+                <input type="text" id="usr_upd_apellidos" placeholder="Nuevos Apellidos" required>
+                <input type="text" id="usr_upd_direccion" placeholder="Nueva Dirección" required>
+                <input type="email" id="usr_upd_email" placeholder="Nuevo eMail" required>
+                <input type="text" id="usr_upd_bancario" placeholder="Nuevos Datos Bancarios" required>
+                <select id="usr_upd_estado">
+                    <option value="ACTIVO">ACTIVO</option>
+                    <option value="INACTIVO">INACTIVO</option>
+                    <option value="SUSPENDIDO">SUSPENDIDO</option>
+                </select>
+                <div class="modal-acciones">
+                    <button type="button" class="btn-modal btn-cancelar" onclick="cerrarModal('modalUpdUser')">Cancelar</button>
+                    <button type="submit" class="btn-modal btn-guardar">Actualizar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalDelUser" class="modal">
+        <div class="modal-contenido">
+            <h3>Eliminar Registro de Usuario</h3>
+            <form id="formDelUser">
+                <p>Ingresa el ID del usuario que deseas remover permanentemente de SQL Server:</p>
+                <input type="number" id="usr_del_id" placeholder="ID Usuario" required>
+                <div class="modal-acciones">
+                    <button type="button" class="btn-modal btn-cancelar" onclick="cerrarModal('modalDelUser')">Cancelar</button>
+                    <button type="submit" class="btn-modal btn-cancelar" style="background-color: #f44336;">Eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'api.php';
+
+        function abrirModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function cerrarModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        // RENDEREAR TABLA: USUARIOS
+        function cargarUsuarios() {
+            fetch(`${API_URL}?accion=listar_usuarios`)
+                .then(res => res.json())
+                .then(datos => {
+                    const tbody = document.querySelector("#tablaUsuarios tbody");
+                    tbody.innerHTML = "";
+                    if (datos.length === 0 || datos.status === "error") {
+                        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">Sin datos de usuarios disponibles</td></tr>`;
+                        return;
+                    }
+                    datos.forEach(u => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${u.ID_cliente}</td>
+                                <td>${u.Nombre}</td>
+                                <td>${u.Apellidos}</td>
+                                <td>${u.Domicilio}</td>
+                                <td>${u.Email_C}</td>
+                                <td>${u.Datos_bancarios ? u.Datos_bancarios : 'N/A'}</td>
+                                <td>${u.Estado}</td>
+                                <td>${u.Fecha_registro ? u.Fecha_registro.substring(0, 10) : ''}</td>
+                            </tr>`;
+                    });
+                });
+        }
+
+        document.getElementById("formAddUser").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const data = {
+                id_cliente: document.getElementById("usr_add_id").value,
+                nombre: document.getElementById("usr_add_nombre").value,
+                apellidos: document.getElementById("usr_add_apellidos").value,
+                direccion: document.getElementById("usr_add_direccion").value,
+                email: document.getElementById("usr_add_email").value,
+                bancario: document.getElementById("usr_add_bancario").value,
+                estado: document.getElementById("usr_add_estado").value,
+                contraseña: document.getElementById("usr_add_pass").value
+            };
+            enviarTransaccion('insertar_usuario', data, 'modalAddUser', this);
+        });
+
+        document.getElementById("formUpdUser").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const data = {
+                id_cliente: document.getElementById("usr_upd_id").value,
+                nombre: document.getElementById("usr_upd_nombre").value,
+                apellidos: document.getElementById("usr_upd_apellidos").value,
+                direccion: document.getElementById("usr_upd_direccion").value,
+                email: document.getElementById("usr_upd_email").value,
+                bancario: document.getElementById("usr_upd_bancario").value,
+                estado: document.getElementById("usr_upd_estado").value
+            };
+            enviarTransaccion('actualizar_usuario', data, 'modalUpdUser', this);
+        });
+
+        document.getElementById("formDelUser").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const data = { id_cliente: document.getElementById("usr_del_id").value };
+            enviarTransaccion('eliminar_usuario', data, 'modalDelUser', this);
+        });
+
+        function enviarTransaccion(accion, data, modalId, form) {
+            fetch(`${API_URL}?accion=${accion}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(res => {
+                if(res.status === "success") {
+                    alert(res.message);
+                    form.reset();
+                    cerrarModal(modalId);
+                    cargarUsuarios();
+                } else {
+                    alert("Error en SQL Server: " + res.message);
+                }
+            });
+        }
+
+        window.onload = function() {
+            cargarUsuarios();
+        };
+    </script>
+</body>
+</html>
